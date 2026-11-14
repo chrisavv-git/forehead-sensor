@@ -1,0 +1,5 @@
+# 16 MB flash: settings (NVS), the firmware (1 MB; it needs ~0.4), and a 15 MB ring for the night log (3824 blocks of 4 KB)
+# Name,   Type, SubType, Offset,   Size
+nvs,      data, nvs,     0x9000,   0x5000,
+app0,     app,  factory, 0x10000,  0x100000,
+fhslog,   data, 0x40,    0x110000, 0xEF0000,

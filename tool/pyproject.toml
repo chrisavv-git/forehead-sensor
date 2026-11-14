@@ -1,0 +1,16 @@
+[project]
+name = "fhs"
+version = "0.1.0"
+description = "Laptop side of the forehead sensor: live recording, flash dumps, settings, bench tests"
+requires-python = ">=3.10"
+dependencies = ["bleak>=0.22", "pyserial>=3.5", "numpy>=1.24", "piper-tts>=1.2"]
+
+[project.scripts]
+fhs = "fhs.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["fhs"]

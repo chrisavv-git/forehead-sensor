@@ -1,0 +1,10 @@
+.venv/
+.cache/
+firmware/out/
+firmware/host/test_core
+firmware/host/fhsim
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+firmware/twatch/key_salt.h
