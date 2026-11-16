@@ -12,7 +12,7 @@
 
 namespace fhs {
 
-#define FHS_FW_VERSION "0.0.3"
+#define FHS_FW_VERSION "0.0.4"
 
 struct State {          // kept outside the log flash (internal flash on the chip), survives an erase
   uint32_t boot_id = 0;     // last boot id handed out
@@ -81,6 +81,7 @@ class Device {
   void imu(const int16_t raw[6]);               // one sample: ax ay az gx gy gz (gyro 0 without one)
   void mic(const int16_t* pcm, int n);
   void mic_start() { sense_.mic_start(); }      // the mic was switched on again (a burst)
+  uint32_t seq0_ms() const { return seq0_ms_; }   // when window 0 began (hal ms): the hardware times its mic bursts on it
   void double_tap();                            // the button asked for the spoken zero (starts it, or cancels it)
   // the button (the watch's power chip reports press and release). A DOUBLE PRESS (two short presses, the second
   // within DOUBLE_GAP_MS of letting go of the first) starts the spoken zero, with a short buzz the moment it is

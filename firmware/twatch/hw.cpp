@@ -340,7 +340,7 @@ static bool mic_begin() {
   return i2s_channel_init_pdm_rx_mode(mic, &pc) == ESP_OK;
 }
 
-// the next burst start: 50 ms into each of the core's 0.5 s windows (they start at mic_base)
+// the next burst start: 50 ms into each of the core's 0.5 s windows (they start at mic_base = dev.seq0_ms())
 static uint32_t mic_next(uint32_t now) {
   uint32_t k = (now - mic_base) / WINDOW_MS + 1;
   return mic_base + k * WINDOW_MS + 50;
@@ -760,9 +760,12 @@ void setup() {
   spk_begin();
   mic_begin();
   usb_in = pmu_ok && pmu.isVbusIn();
-  mic_base = millis();
-  mic_burst_at = mic_next(mic_base);
   dev.begin(&hal, &logflash);
+  // the mic bursts on the core's own window grid: taken before dev.begin() (whose log scan takes 0.1-0.5 s, longer
+  // as the log fills), the grids sat apart by the scan time, and at ~165-205 ms the window edge fell at the burst's
+  // end: with the naps, 20-30 % of the windows got no mic samples and some lost motion samples
+  mic_base = dev.seq0_ms();
+  mic_burst_at = mic_next(mic_base);
   imu_ok = imu_begin();
   if (!hal.resumed()) screen_show(millis(), 5000);   // power-up: show the status once (not in the night after a hang)
   // the watchdog: if loop() stops coming round for 5 s (a hang), the chip restarts, and the core carries on at
