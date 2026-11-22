@@ -21,7 +21,7 @@ It also records the whole night (head angle, movement, sound). In the morning th
 | --- | --- |
 | Day | Keep it **on the charger**. On the charger it never records or nudges. |
 | Bedtime | **Unplug it**, tape it on, lie down on your side. |
-| 1 min later | **Two light taps** = it's on duty. Go to sleep. |
+| 1 min later | **Two soft buzzes** = it's on duty. Go to sleep. |
 | Morning | **Plug it in**, and run `fhs dump --usb` on the laptop. |
 
 You don't need to switch it on or off. It starts by itself when you lie down off the charger, and stops when you get up or plug it in. The time of day doesn't matter, so naps work the same way.
@@ -32,7 +32,7 @@ For the first 15 minutes it doesn't nudge, so you can fall asleep.
 
 | You feel | Meaning |
 | --- | --- |
-| 2 light taps, 1 min after lying down | On duty: it's recording and watching |
+| 2 short soft buzzes, 1 min after lying down | On duty: it's recording and watching |
 | 3 long buzzes, 1 min after lying down | Battery low (under about 40 %): charge it before you sleep |
 | Nothing, 1 min after lying down | Something is wrong: still on the charger, switched off, or the battery is empty |
 | Vibration, getting stronger, then sound | You're on your back or half way: turn onto your side |
@@ -117,7 +117,7 @@ The watch can't tell your head from a table or a bag: lying face up, it looks li
 | Next to a charger | on the charger |
 | In a bag, pocket, or on a table without a charger | **switch it off** (hold the button 10 s) |
 
-- Bedtime: short press to switch it on, tape it on, lie down. 1 min later, two light taps. **No buzz: you probably forgot to switch it on.**
+- Bedtime: short press to switch it on, tape it on, lie down. 1 min later, two soft buzzes. **No buzz: you probably forgot to switch it on.**
 - Nothing is lost when it's off: settings, "flat" and the nights stay saved.
 - Time zones don't matter. It stores about 2 weeks of nights; when full, it overwrites the oldest.
 - Back home, read it with the laptop set to the time zone you slept in, then set the clock back:

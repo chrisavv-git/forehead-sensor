@@ -12,7 +12,7 @@
 
 namespace fhs {
 
-#define FHS_FW_VERSION "0.0.5"
+#define FHS_FW_VERSION "0.0.6"
 
 struct State {          // kept outside the log flash (internal flash on the chip), survives an erase
   uint32_t boot_id = 0;     // last boot id handed out
@@ -175,7 +175,7 @@ class Device {
   uint16_t hz_out_ = 0;
   uint32_t test_until_ = 0, test_ms_ = 0;
   bool test_in_window_ = false, playing_ = false;
-  // the bedtime buzz when a session starts: two short soft taps (on duty) or three long ones (battery low)
+  // the bedtime buzz when a session starts: two short soft pulses (on duty) or three long ones (battery low)
   bool cue_ = false, cue_in_window_ = false;
   uint8_t cue_variant_ = 0;   // 0 on duty, 1 battery low
   uint32_t cue_ms_ = 0;

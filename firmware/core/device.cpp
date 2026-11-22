@@ -224,15 +224,14 @@ void Device::link(int port, bool up) {
 
 // ---------- the 0.5 s tick ----------
 
-// the bedtime buzz, t ms in: vibration %, or -1 once it's over. Variant 0: two short taps (on duty), like the
-// "zero set" buzz (2 x 120 ms at 80 %, felt every bedtime); 1: three long ones at full strength (the battery is too
-// low for a night: that one should wake you). 2 x 120 ms at 60 % was never felt and didn't even start the coin motor
-// on battery (31 Oct); 2 x 0.4 s at full strength then "almost scared me, i was falling asleep" (22 Nov)
+// the bedtime buzz, t ms in: vibration %, or -1 once it's over. Variant 0: two pulses (on duty); 1: three long
+// ones (the battery is too low for a night). Full strength and 0.4 s: 2 x 120 ms at 60 % was never felt and didn't
+// even start the coin motor on battery (31 Oct)
 static int cue_motor(uint8_t variant, uint32_t t) {
-  static const uint16_t OK_MS[] = {120, 120, 120, 0}, LOW_MS[] = {600, 300, 600, 300, 600, 0};   // on, off, on...
+  static const uint16_t OK_MS[] = {400, 300, 400, 0}, LOW_MS[] = {600, 300, 600, 300, 600, 0};   // on, off, on...
   const uint16_t* seg = variant ? LOW_MS : OK_MS;
   for (int i = 0; seg[i]; i++) {
-    if (t < seg[i]) return i % 2 ? 0 : (variant ? 100 : 80);
+    if (t < seg[i]) return i % 2 ? 0 : 100;
     t -= seg[i];
   }
   return -1;
