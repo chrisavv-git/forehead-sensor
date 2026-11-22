@@ -16,7 +16,7 @@ Positional devices usually sit on the chest or the neck. But it's the **head** t
 - **Nudges that escalate:** head flat for 10 s → gentle vibration → strong vibration → vibration + soft sound → vibration + loud sound, every 10 s, repeating until the head turns. Every step plays a randomly picked pattern and sound (16 variants) at a slightly random time, so you don't get used to one buzz.
 - **"Flat" includes the in-between:** by default it nudges whenever the head is within 60° of face up (`angle`), not only fully on the back. It stops once the head is past 65°.
 - **Waits:** no nudge for the first 15 min (falling asleep) or for 5 min after you sit up; 60 s flat on the back ends that pause early.
-- **Starts and stops by itself:** off the charger and lying down, a night session starts after 2 min (two soft buzzes). Plugged in, it neither logs nor nudges. Time of day plays no part, so naps work too.
+- **Starts and stops by itself:** off the charger and lying down, a night session starts after 1 min (two light taps). Plugged in, it neither logs nor nudges. Time of day plays no part, so naps work too.
 - **Spoken zero:** a double press of the button and the watch talks you through setting "flat" for your head (lie flat, it counts down, measures 3 s of stillness, says the result).
 - **Two modes:** *shadow* (logs what it would do, nudges nothing; the default) and *therapy* (it nudges).
 - **No Bluetooth, no app, no cloud.** In the morning, plug it into a laptop and `fhs dump --usb` copies the nights off the flash.
@@ -66,7 +66,7 @@ Or skip the build: each [release](../../releases) has a ready file to flash (see
 ## How a night works
 
 1. At bedtime, unplug the watch and tape it on, button toward the hairline.
-2. Lie down. 2 min later, two soft buzzes: it's on duty. Three long buzzes instead: battery under ~40 %, charge it first.
+2. Lie down. 1 min later, two light taps: it's on duty. Three long buzzes instead: battery under ~40 %, charge it first.
 3. In therapy mode it nudges as above when your head stays flat.
 4. In the morning: plug it in, `fhs dump --usb`. The nights land in `~/sleep-data/<date>_night/work/sensor.csv` (one row per 0.5 s: angles, movement, sound, every nudge with its step), and the watch's clock is set from the laptop.
 

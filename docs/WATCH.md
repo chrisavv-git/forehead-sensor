@@ -83,7 +83,7 @@ To feel the nudges without the night's waits (15 min to fall asleep, 5 min after
 .venv/bin/fhs mode therapy --usb
 ```
 
-Unplug, lie flat on the back. The night log starts after 2 min lying; 10 s later it vibrates, then harder, then it beeps, then loud. Turn to the side: it stops at once. Afterwards plug it in and put the waits back: `fhs set start_wait 900 --usb`, `fhs set upright_pause 300 --usb`.
+Unplug, lie flat on the back. The night log starts after 1 min lying; 10 s later it vibrates, then harder, then it beeps, then loud. Turn to the side: it stops at once. Afterwards plug it in and put the waits back: `fhs set start_wait 900 --usb`, `fhs set upright_pause 300 --usb`.
 
 ## 6. The first nights
 
@@ -93,7 +93,7 @@ Start in **shadow mode** (the default) if you like: it nudges nothing and logs w
 .venv/bin/fhs mode therapy --usb
 ```
 
-Unplug it at bedtime (on the charger it doesn't log or nudge). 2 min after lying down it buzzes twice, softly: it's logging. Three long buzzes instead: the battery is too low for a night, charge it. In the morning:
+Unplug it at bedtime (on the charger it doesn't log or nudge). 1 min after lying down it taps twice, lightly: it's logging. Three long buzzes instead: the battery is too low for a night, charge it. In the morning:
 
 ```
 .venv/bin/fhs status --usb       # battery left: above ~40 % means a full night is safe

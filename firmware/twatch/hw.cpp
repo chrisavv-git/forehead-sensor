@@ -769,7 +769,7 @@ void setup() {
   imu_ok = imu_begin();
   if (!hal.resumed()) screen_show(millis(), 5000);   // power-up: show the status once (not in the night after a hang)
   // the watchdog: if loop() stops coming round for 5 s (a hang), the chip restarts, and the core carries on at
-  // once (resumed()): no 2 min wait for the session, no 15 min start wait
+  // once (resumed()): no 1 min wait for the session, no 15 min start wait
   enableLoopWDT();
 }
 

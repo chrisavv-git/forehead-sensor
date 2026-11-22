@@ -127,7 +127,7 @@ def test_commands_and_auth(tmp_path, env):
     p, usb, ble = start_sim(tmp_path, 'seg 600 pitch 0\n', '--speed', '1')
     try:
         out = fhs(env, 'status', '--port', usb).stdout
-        assert 'firmware 0.0.4' in out and 'mode shadow' in out
+        assert 'firmware 0.0.5' in out and 'mode shadow' in out
         assert fhs(env, 'get', '--serial-ble', ble, check=False).returncode == 1   # no key yet
         assert 'OK set angle=40' in fhs(env, 'set', 'angle', '40', '--port', usb).stdout
         assert fhs(env, 'set', 'angle', '400', '--port', usb, check=False).returncode == 1

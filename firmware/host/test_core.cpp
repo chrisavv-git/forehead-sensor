@@ -88,7 +88,7 @@ static bool parse_R(const std::string& l, uint32_t* boot, uint32_t* seq, Record*
 
 static bool only_cue(const std::vector<std::pair<uint32_t, uint8_t>>& log) {   // just the bedtime buzz ran
   int on = 0;
-  for (auto& e : log) { if (e.second && e.second != 100) return false; on += e.second > 0; }
+  for (auto& e : log) { if (e.second && e.second != 80) return false; on += e.second > 0; }
   return on <= 2;
 }
 
@@ -506,7 +506,7 @@ static void test_live_and_catchup() {
   Rig g("seg 4000 pitch 0\n");
   g.cmd("set win_from 0");   // logging gate: no window
   g.cmd("set win_to 0");
-  g.run(200);                // lying 200 s: the session starts after 120 s and logs from the start of lying
+  g.run(200);                // lying 200 s: the session starts after 60 s and logs from the start of lying
   CHECK(g.dev->session());
   uint32_t boot = g.dev->log().boot_id();
   // live
@@ -631,14 +631,14 @@ static void test_session_gate() {
     g.run(130);
     CHECK(g.dev->session());
   }
-  {   // sitting up: no session; lying 2 min: session
+  {   // sitting up: no session; lying 1 min: session
     Rig g("seg 300 pitch 80\nseg 400 pitch 0\n");
     g.cmd("set win_from 0"); g.cmd("set win_to 0");
     g.run(290);
     CHECK(!g.dev->session());
-    g.run(100);
+    g.run(50);
     CHECK(!g.dev->session());
-    g.run(40);
+    g.run(30);
     CHECK(g.dev->session());
   }
   {   // the night window: with the clock at 14:00 local, nothing; at 23:00 it logs
@@ -795,18 +795,18 @@ static void test_watch() {
   CHECK(!g.hal.tone_log.empty() && g.hal.tone_log[0].second == 100);
   CHECK(!g.hal.motor_log.empty() && g.hal.motor_level == 0 && g.hal.tone_vol == 0);
   CHECK(g.hal.tone_log.back().first - g.hal.tone_log.front().first < 2100);
-  // a hang in the night (watchdog restart): nudging resumes within seconds, not after 2 min + the 15 min wait
+  // a hang in the night (watchdog restart): nudging resumes within seconds, not after 1 min + the 15 min wait
   for (int hang = 0; hang < 2; hang++) {
     Rig h(std::string("watch\n") + NIGHT);
     h.cmd("set win_from 0"); h.cmd("set win_to 0"); h.cmd("set upright_pause 0"); h.cmd("mode therapy");
-    h.run(600);                                     // on the back since 35 s; session from ~155 s; still in the wait
+    h.run(600);                                     // on the back since 35 s; session from ~95 s; still in the wait
     CHECK(only_cue(h.hal.motor_log));              // the bedtime buzz only
     h.hal.resumed_ = hang;
     h.boot();
     h.hal.motor_log.clear();
     h.run(15);                                      // 10 s delay (+-3 s jitter)
     CHECK(hang ? !h.hal.motor_log.empty() : h.hal.motor_log.empty());
-    CHECK(h.dev->session() == bool(hang));          // a power-up waits 2 min lying for its session
+    CHECK(h.dev->session() == bool(hang));          // a power-up waits 1 min lying for its session
     if (hang) CHECK(std::find(h.hal.events.begin(), h.hal.events.end(), "session resumed after a restart") != h.hal.events.end());
   }
   // the watch hears the notes (it confirms a zero with its own buzz)
@@ -1106,16 +1106,22 @@ static void test_night_records() {
 
 static void test_bedtime_cue() {
   printf("bedtime buzz\n");
-  for (int low = 0; low < 2; low++) {   // on duty: two 0.4 s pulses; battery low: three long ones, all full strength
+  for (int low = 0; low < 2; low++) {   // on duty: two short taps at 80 % (22 Nov); battery low: three long, full
     Rig g(low ? "batt 3700 3700\nseg 400 roll 80 pitch 0\n" : "seg 400 roll 80 pitch 0\n");
-    g.run(110);
+    g.run(50);
     CHECK(!g.dev->session() && g.hal.motor_log.empty());
     g.run(20);
-    CHECK(g.dev->session());   // 2 min lying on the side: the session starts, and the buzz with it
+    CHECK(g.dev->session());   // 1 min lying on the side: the session starts, and the buzz with it
     std::vector<uint8_t> on;
-    for (auto& e : g.hal.motor_log) if (e.second) on.push_back(e.second);
+    std::vector<uint32_t> on_ms;   // how long each pulse ran
+    for (size_t i = 0; i < g.hal.motor_log.size(); i++)
+      if (g.hal.motor_log[i].second) {
+        on.push_back(g.hal.motor_log[i].second);
+        if (i + 1 < g.hal.motor_log.size()) on_ms.push_back(g.hal.motor_log[i + 1].first - g.hal.motor_log[i].first);
+      }
     CHECK(on.size() == (low ? 3u : 2u));
-    CHECK(!on.empty() && on[0] == 100);
+    CHECK(!on.empty() && on[0] == (low ? 100 : 80));
+    for (uint32_t d : on_ms) CHECK(low ? d >= 550 : (d >= 100 && d <= 150));
     CHECK(!g.hal.motor_log.empty() && g.hal.motor_log.back().second == 0);   // and it ends
     g.cmd("live on");
     g.run(30);
@@ -1136,11 +1142,11 @@ static void test_bedtime_cue() {
       // full (31 Oct: it was skipped every time, now - cue_ms_ went "negative")
     Rig g("seg 400 roll 80 pitch 0\n");
     g.hal.ms_step = 1;
-    g.run(130);
+    g.run(70);
     CHECK(g.dev->session());
     std::vector<uint8_t> on;
     for (auto& e : g.hal.motor_log) if (e.second) on.push_back(e.second);
-    CHECK(on.size() == 2u && on[0] == 100);
+    CHECK(on.size() == 2u && on[0] == 80);
   }
   {   // back from a hang in the night: no buzz, it carries on quietly
     Rig g("seg 400 roll 80 pitch 0\n");

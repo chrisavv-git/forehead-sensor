@@ -224,14 +224,15 @@ void Device::link(int port, bool up) {
 
 // ---------- the 0.5 s tick ----------
 
-// the bedtime buzz, t ms in: vibration %, or -1 once it's over. Variant 0: two pulses (on duty); 1: three long
-// ones (the battery is too low for a night). Full strength and 0.4 s: 2 x 120 ms at 60 % was never felt and didn't
-// even start the coin motor on battery (31 Oct)
+// the bedtime buzz, t ms in: vibration %, or -1 once it's over. Variant 0: two short taps (on duty), like the
+// "zero set" buzz (2 x 120 ms at 80 %, felt every bedtime); 1: three long ones at full strength (the battery is too
+// low for a night: that one should wake you). 2 x 120 ms at 60 % was never felt and didn't even start the coin motor
+// on battery (31 Oct); 2 x 0.4 s at full strength then "almost scared me, i was falling asleep" (22 Nov)
 static int cue_motor(uint8_t variant, uint32_t t) {
-  static const uint16_t OK_MS[] = {400, 300, 400, 0}, LOW_MS[] = {600, 300, 600, 300, 600, 0};   // on, off, on...
+  static const uint16_t OK_MS[] = {120, 120, 120, 0}, LOW_MS[] = {600, 300, 600, 300, 600, 0};   // on, off, on...
   const uint16_t* seg = variant ? LOW_MS : OK_MS;
   for (int i = 0; seg[i]; i++) {
-    if (t < seg[i]) return i % 2 ? 0 : 100;
+    if (t < seg[i]) return i % 2 ? 0 : (variant ? 100 : 80);
     t -= seg[i];
   }
   return -1;
@@ -388,7 +389,7 @@ void Device::update_session(bool lying, uint32_t now) {
     if (session_) end_session();
     return;
   }
-  // back from a hang or crash in the night: the session was cut, so carry on without the 2 min and the start wait
+  // back from a hang or crash in the night: the session was cut, so carry on without the 1 min and the start wait
   // (only in the first 10 min after the restart; a later lie-down is a new night)
   if (resume_ && now - seq0_ms_ > 10u * 60 * 1000) resume_ = false;
   if (!session_ && resume_ && (lying || !p_.lie_gate)) {
@@ -401,7 +402,7 @@ void Device::update_session(bool lying, uint32_t now) {
     if (!session_) start_session(now, 0);
     return;
   }
-  if (!session_ && lie_n_ >= 240) start_session(now, lie_n_ - 1);   // 2 min lying: log from when it began
+  if (!session_ && lie_n_ >= 120) start_session(now, lie_n_ - 1);   // 1 min lying: log from when it began (2 min until 0.0.5)
   else if (session_ && unlie_n_ >= 2400) end_session();             // 20 min not lying (up for the day)
 }
 

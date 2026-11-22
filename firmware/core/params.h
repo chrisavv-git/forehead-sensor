@@ -38,7 +38,7 @@ struct Params {
   uint8_t log_usb = 0;           // also log while on USB power (default: on the charger = not worn, no log)
   uint8_t win_from_h = 0;        // with the clock set, only log between these local hours (from == to: always).
   uint8_t win_to_h = 0;          // Always by default: naps count too, and abroad the watch can't know the local time
-  uint8_t lie_gate = 1;          // only log while lying: a session starts after 2 min lying, ends after 20 min not
+  uint8_t lie_gate = 1;          // only log while lying: a session starts after 1 min lying, ends after 20 min not
   uint16_t low_mv = 3500;        // F_LOWBAT below this
   uint16_t cutoff_mv = 3300;     // below this (off USB): stop logging and nudging, to end the night cleanly
   uint16_t night_mv = 3800;      // the bedtime buzz warns (three long) below this (~40 %): not enough for a night

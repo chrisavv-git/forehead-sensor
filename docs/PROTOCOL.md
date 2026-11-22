@@ -97,9 +97,9 @@ Event lines the device sends on its own: `N <text>`, for example `N zero set by 
 | still | 15 | 0.5–50 °/s | still enough for the zero (4 refused every bedtime zero on 30 Oct 2026) |
 | log_usb | 0 | 0/1 | also log while on USB power |
 | win_from / win_to | 0 / 0 | 0–23 h | with the clock set, only log between these hours (equal: always, the default) |
-| lie_gate | 1 | 0/1 | only log while lying (session: starts after 2 min lying, ends after 20 min not lying) |
+| lie_gate | 1 | 0/1 | only log while lying (session: starts after 1 min lying, ends after 20 min not lying) |
 | low_mv / cutoff_mv | 3500 / 3300 | mV | low-battery flag; below the cutoff (off USB) logging and nudging stop, until 100 mV above it |
-| night_mv | 3800 | 3300–4200 mV | when a session starts, two short soft buzzes (on duty), or three long ones if the battery is below this (~40 %: charge it first) |
+| night_mv | 3800 | 3300–4200 mV | when a session starts, two light taps (on duty), or three long ones if the battery is below this (~40 %: charge it first) |
 | mic_duty | 25 | 10–100 % | how much of every 0.5 s window the mic listens (the chip sleeps the rest) |
 
 ## Nudge variants
